@@ -1,0 +1,148 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans/700.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------ design tokens
+   Text-bearing colours are tuned for WCAG 2.1 AA (>= 4.5:1) on every surface they appear on,
+   including their own 10-15 % badge tints (checked with axe-core).
+   Midnight base, indigo primary, electric-blue data, violet for privacy/DP.
+   Semantic: signal (good), amber (caution), rose (risk). */
+:root,
+[data-theme="dark"] {
+  --c-bg: #090d1c;
+  --c-bg-2: #0d1328;
+  --c-surface: #111830;
+  --c-raised: #172040;
+  --c-line: #222c52;
+  --c-line-strong: #2f3b6b;
+  --c-text: #e7eaf6;
+  --c-text-2: #aab1d1;
+  --c-muted: #9ba1bd;
+  --c-indigo: #9897ff;
+  --c-indigo-strong: #6360f0;
+  --c-indigo-hover: #5552e0;
+  --c-blue: #58a6ff;
+  --c-violet: #b18cff;
+  --c-signal: #3ddc97;
+  --c-amber: #f5b84b;
+  --c-rose: #f16a85;
+  --c-grid: rgba(124, 123, 255, 0.06);
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 12px 32px -18px rgba(0, 0, 0, 0.7);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --c-bg: #f3f5fb;
+  --c-bg-2: #eceff8;
+  --c-surface: #ffffff;
+  --c-raised: #f6f7fd;
+  --c-line: #dde2f0;
+  --c-line-strong: #c6cde3;
+  --c-text: #111633;
+  --c-text-2: #3d4466;
+  --c-muted: #565c7e;
+  --c-indigo: #4e4cc9;
+  --c-indigo-strong: #4a45d6;
+  --c-indigo-hover: #3d39b8;
+  --c-blue: #1c5ab6;
+  --c-violet: #6844bf;
+  --c-signal: #106a56;
+  --c-amber: #7d5619;
+  --c-rose: #a43151;
+  --c-grid: rgba(91, 87, 232, 0.06);
+  --shadow-panel: 0 1px 2px rgba(17, 22, 51, 0.05), 0 10px 30px -20px rgba(17, 22, 51, 0.25);
+  color-scheme: light;
+}
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --color-bg: var(--c-bg);
+  --color-bg-2: var(--c-bg-2);
+  --color-surface: var(--c-surface);
+  --color-raised: var(--c-raised);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+  --color-ink: var(--c-text);
+  --color-ink-2: var(--c-text-2);
+  --color-muted: var(--c-muted);
+  --color-indigo: var(--c-indigo);
+  --color-indigo-strong: var(--c-indigo-strong);
+  --color-indigo-hover: var(--c-indigo-hover);
+  --color-blue: var(--c-blue);
+  --color-violet: var(--c-violet);
+  --color-signal: var(--c-signal);
+  --color-amber: var(--c-amber);
+  --color-rose: var(--c-rose);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 1, "ss02" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Faint lattice behind the app — the "privacy grid" motif. */
+.app-backdrop {
+  background-color: var(--c-bg);
+  background-image:
+    radial-gradient(1100px 520px at 85% -10%, color-mix(in srgb, var(--c-indigo) 14%, transparent), transparent 70%),
+    linear-gradient(var(--c-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-grid) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+}
+
+.panel {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-panel);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-blue);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+input[type="range"] {
+  accent-color: var(--c-indigo);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--c-indigo) 35%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar { height: 8px; width: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--c-line-strong); border-radius: 8px; }
+
+.recharts-text { fill: var(--c-muted); font-size: 11px; }
+.recharts-cartesian-grid line { stroke: var(--c-line); }
+.recharts-legend-item-text { color: var(--c-text-2) !important; font-size: 12px; }

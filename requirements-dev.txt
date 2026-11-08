@@ -1,0 +1,7 @@
+# Test, lint and security tooling used by verify.ps1
+pytest>=8
+httpx>=0.27
+ruff>=0.6
+mypy>=1.11
+bandit>=1.7.9
+pip-audit>=2.7
