@@ -93,9 +93,9 @@ function JobIndicator() {
 
 function SideNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
   return (
-    <nav aria-label="Primary" className="flex-1 overflow-y-auto px-3 pb-4">
+    <nav aria-label="Primary" className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-4">
       {NAV.map((g) => (
-        <div key={g.group} className="mt-5 first:mt-2">
+        <div key={g.group} className="mt-4 first:mt-2">
           {!collapsed && <p className="px-3 pb-1.5 text-xs font-medium text-muted">{g.group}</p>}
           <ul className="space-y-0.5">
             {g.items.map(({ to, label, icon: Icon }) => (
@@ -107,7 +107,7 @@ function SideNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
                   title={collapsed ? label : undefined}
                   className={({ isActive }) =>
                     clsx(
-                      "group relative flex h-9 items-center gap-3 rounded-lg px-3 text-sm transition-colors",
+                      "group relative flex h-8 items-center gap-3 rounded-lg px-3 text-sm transition-colors",
                       collapsed && "justify-center px-0",
                       isActive ? "bg-indigo/12 text-ink" : "text-ink-2 hover:bg-raised hover:text-ink",
                     )
@@ -115,7 +115,7 @@ function SideNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
                 >
                   {({ isActive }) => (
                     <>
-                      {isActive && <span className="absolute left-0 top-1.5 h-6 w-[3px] rounded-r bg-indigo" aria-hidden />}
+                      {isActive && <span className="absolute left-0 top-1.5 h-5 w-[3px] rounded-r bg-indigo" aria-hidden />}
                       <Icon className={clsx("size-[18px] shrink-0", isActive ? "text-indigo" : "text-muted group-hover:text-ink-2")} aria-hidden />
                       {!collapsed && <span className="truncate">{label}</span>}
                       {isActive && <span className="sr-only">(current page)</span>}
@@ -134,7 +134,7 @@ function SideNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
 export function Layout() {
   const [collapsed, setCollapsed] = useState(() => {
     try {
-      return localStorage.getItem("umbra-nav") === "1";
+      return localStorage.getItem("privora-nav") === "1";
     } catch {
       return false;
     }
@@ -144,7 +144,7 @@ export function Layout() {
   const loc = useLocation();
   useEffect(() => {
     try {
-      localStorage.setItem("umbra-nav", collapsed ? "1" : "0");
+      localStorage.setItem("privora-nav", collapsed ? "1" : "0");
     } catch {
       /* ignore */
     }
@@ -156,11 +156,11 @@ export function Layout() {
   }, [loc.pathname]);
 
   const brand = (
-    <div className={clsx("flex h-16 items-center gap-3 px-5", collapsed && "justify-center px-0")}>
+    <div className={clsx("flex h-16 shrink-0 items-center gap-3 px-5", collapsed && "justify-center px-0")}>
       <BrandMark className="size-8 shrink-0" />
       {!collapsed && (
         <div className="leading-tight">
-          <p className="text-[15px] font-semibold tracking-tight text-ink">Umbra</p>
+          <p className="text-[15px] font-semibold tracking-tight text-ink">Privora</p>
           <p className="text-xs text-muted">Privacy-preserving ML</p>
         </div>
       )}
@@ -176,7 +176,7 @@ export function Layout() {
       <aside className={clsx("fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-line bg-bg/85 backdrop-blur-xl transition-[width] duration-200 lg:flex", collapsed ? "w-[72px]" : "w-[252px]")}>
         {brand}
         <SideNav collapsed={collapsed} />
-        <div className="border-t border-line p-3">
+        <div className="shrink-0 border-t border-line p-3">
           <button
             onClick={() => setCollapsed((c) => !c)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -211,7 +211,7 @@ export function Layout() {
           </button>
           <div className="flex items-center gap-2 lg:hidden">
             <BrandMark className="size-7" />
-            <span className="font-semibold">Umbra</span>
+            <span className="font-semibold">Privora</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
             <JobIndicator />

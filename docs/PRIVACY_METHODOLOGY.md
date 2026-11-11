@@ -1,6 +1,6 @@
 # Privacy Methodology
 
-This document states exactly what each privacy mechanism in Umbra does, what guarantee (if any)
+This document states exactly what each privacy mechanism in Privora does, what guarantee (if any)
 it provides, and under which assumptions. The implementation is the source of truth; file
 references are given for each claim.
 
@@ -19,7 +19,7 @@ measurable sets *S*:
 
 ## 2. Deployment models
 
-| Model | Who is trusted | Where noise is added | In Umbra |
+| Model | Who is trusted | Where noise is added | In Privora |
 |---|---|---|---|
 | Central DP | the curator/trainer | to the model (gradients) | DP Studio (DP-SGD) |
 | Local DP | nobody | to each record before it leaves the owner | Inspector "Local DP" action |
@@ -148,7 +148,7 @@ Implementation: `backend/ppml/core/attacks/membership.py`.
   DP statement. Treat it as an indicator of how strongly this attack separates the two groups. It can
   never certify privacy.
 
-## 8. What Umbra does not claim
+## 8. What Privora does not claim
 
 * No claim of anonymity for masked/pseudonymised/generalised data.
 * No privacy claim for FedAvg without DP.

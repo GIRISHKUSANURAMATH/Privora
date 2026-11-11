@@ -49,7 +49,7 @@ def create_app(settings: Settings | None = None, serve_frontend: bool = True) ->
         runner.pool.shutdown(wait=False, cancel_futures=True)
 
     app = FastAPI(
-        title="Umbra PPML API",
+        title="Privora API",
         version=__version__,
         lifespan=lifespan,
         docs_url="/api/docs",

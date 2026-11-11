@@ -1,4 +1,4 @@
-"""Umbra — a Privacy-Preserving Machine Learning Framework.
+"""Privora — a Privacy-Preserving Machine Learning Framework.
 
 The package is organised into:
 

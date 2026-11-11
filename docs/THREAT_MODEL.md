@@ -1,6 +1,6 @@
 # Threat Model
 
-Scope: Umbra as shipped — a local, single-user research tool started with `run.ps1` and bound
+Scope: Privora as shipped — a local, single-user research tool started with `run.ps1` and bound
 to `127.0.0.1`. This document follows a STRIDE-style walk through assets, actors, surfaces
 and trust boundaries. It is a design review, **not** a penetration test.
 
@@ -63,7 +63,7 @@ and trust boundaries. It is a design review, **not** a penetration test.
 
 ## 5. Security assumptions
 
-* The machine and the user account running Umbra are trusted.
+* The machine and the user account running Privora are trusted.
 * The server is bound to `127.0.0.1` (default). Docker publishes on `127.0.0.1` only.
 * Only one person uses the instance; there is **no authentication or authorisation**.
 * The browser enforces CORS and CSP correctly.

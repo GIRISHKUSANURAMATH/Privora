@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Start Umbra. By default the FastAPI backend serves the built UI at http://127.0.0.1:8000.
+  Start Privora. By default the FastAPI backend serves the built UI at http://127.0.0.1:8000.
 
 .PARAMETER Dev
   Run the backend and the Vite dev server (hot reload, http://127.0.0.1:5173) side by side.
@@ -50,7 +50,7 @@ if (-not (Test-Path (Join-Path $Script:Root 'frontend\dist\index.html'))) {
     try { Invoke-Checked 'npm' @('run', 'build') 'frontend build' } finally { Pop-Location }
 }
 
-Write-Step "Umbra is starting at http://127.0.0.1:$Port  (Ctrl+C to stop)"
+Write-Step "Privora is starting at http://127.0.0.1:$Port  (Ctrl+C to stop)"
 Write-Info 'Binding to 127.0.0.1 only. The API has no authentication; do not expose it on a network.'
 if (-not $NoBrowser) {
     Start-Job -ScriptBlock { param($u) Start-Sleep -Seconds 4; Start-Process $u } -ArgumentList "http://127.0.0.1:$Port" | Out-Null

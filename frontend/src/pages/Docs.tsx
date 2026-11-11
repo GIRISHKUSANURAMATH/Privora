@@ -36,7 +36,7 @@ const SECTIONS = [
           DP-SGD (Abadi et al., 2016) changes each optimiser step: sample a batch by Poisson sampling with rate q = B/N, compute per-example gradients, clip each to L2 norm C, sum, add Gaussian noise N(0, σ²C²), and divide by the expected batch size. Opacus implements the per-sample gradients, clipping, noise and sampler.
         </p>
         <p>
-          Each step is a subsampled Gaussian mechanism. The accountant composes all T = epochs/q steps. Umbra uses Opacus' <b>RDP</b> accountant by default (Mironov 2017; Mironov, Talwar &amp; Zhang 2019) and offers <b>PRV</b> (Gopi et al., 2021), which is numerically tighter. Gaussian DP is shown only as a comparison because its CLT approximation is not a guaranteed bound.
+          Each step is a subsampled Gaussian mechanism. The accountant composes all T = epochs/q steps. Privora uses Opacus' <b>RDP</b> accountant by default (Mironov 2017; Mironov, Talwar &amp; Zhang 2019) and offers <b>PRV</b> (Gopi et al., 2021), which is numerically tighter. Gaussian DP is shown only as a comparison because its CLT approximation is not a guaranteed bound.
         </p>
         <Callout tone="violet" title="Assumptions behind every ε shown">
           Add/remove-one-record adjacency; one row per person; Poisson sampling as implemented by Opacus' DPDataLoader; preprocessing statistics treated as public; no accounting for hyper-parameter search across runs; non-cryptographic RNG unless secure mode is enabled.
@@ -53,7 +53,7 @@ const SECTIONS = [
           FedAvg (McMahan et al., 2017) repeats: the coordinator sends the global model to a subset of clients; each trains for a few local epochs on its own data; the coordinator replaces the global weights with the sample-weighted average of the returned models. Raw rows never leave a client.
         </p>
         <p>
-          That alone is <b>not</b> a privacy guarantee. Updates are functions of the data, and gradient-inversion and membership attacks can recover information from them. Umbra offers two fixes: DP-FedAvg (McMahan et al., 2018) — clip each client update to norm S, add N(0, z²S²) to the sum on the server, divide by the expected number of clients — and local DP-SGD on every client.
+          That alone is <b>not</b> a privacy guarantee. Updates are functions of the data, and gradient-inversion and membership attacks can recover information from them. Privora offers two fixes: DP-FedAvg (McMahan et al., 2018) — clip each client update to norm S, add N(0, z²S²) to the sum on the server, divide by the expected number of clients — and local DP-SGD on every client.
         </p>
         <p>Non-IID data is simulated with a per-class Dirichlet(α) split; smaller α gives clients more skewed label mixes.</p>
       </>
@@ -116,7 +116,7 @@ export default function Docs() {
   return (
     <div>
       <PageHeader icon={<BookOpen className="size-5" />} title="Documentation" description="What each engine does, what its guarantees assume, and where the limits are. The repository's docs folder has the full methodology, threat model and API reference." />
-      <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[240px_1fr]">
         <nav aria-label="Documentation sections" className="panel self-start p-2">
           {SECTIONS.map((x) => (
             <button key={x.id} onClick={() => setActive(x.id)} aria-current={active === x.id} className={`block w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${active === x.id ? "bg-indigo/12 text-ink" : "text-ink-2 hover:bg-raised"}`}>
@@ -132,7 +132,7 @@ export default function Docs() {
       <div className="mt-8 flex items-center gap-4 rounded-xl border border-line bg-surface/60 p-5">
         <BrandMark className="size-10 shrink-0" />
         <div className="text-[13px] leading-relaxed text-muted">
-          <p className="font-medium text-ink">Umbra 1.0 — Privacy-Preserving Machine Learning Framework</p>
+          <p className="font-medium text-ink">Privora 1.0 — Privacy-Preserving Machine Learning Framework</p>
           <p>FastAPI · PyTorch · Opacus · scikit-learn · React · TypeScript · Tailwind CSS · Recharts. Runs entirely on this machine; no external AI services or paid APIs. MIT licensed.</p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-/* Typed client for the Umbra FastAPI backend. All data shown in the UI comes from here. */
+/* Typed client for the Privora FastAPI backend. All data shown in the UI comes from here. */
 
 export class ApiError extends Error {
   status: number;
@@ -411,4 +411,6 @@ export const api = {
   createReport: (expId: string) => request<Report>(`/api/reports/${expId}`, { method: "POST" }),
   deleteReport: (id: string) => request<void>(`/api/reports/${id}`, { method: "DELETE" }),
   reportUrl: (id: string, format: "md" | "html" | "json") => `/api/reports/${id}/download?format=${format}`,
+  /** Markdown source of a saved report, for previewing it without generating a new one. */
+  reportMarkdown: (id: string) => request<unknown>(`/api/reports/${id}/download?format=md`).then((b) => (typeof b === "string" ? b : JSON.stringify(b, null, 2))),
 };

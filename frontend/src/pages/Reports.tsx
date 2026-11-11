@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FileText, Trash2 } from "lucide-react";
+import { Eye, FileText, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { PageHeader } from "../components/Layout";
 import { DownloadLink } from "../components/shared";
@@ -12,18 +12,24 @@ export default function Reports() {
   const exps = useQuery({ queryKey: ["experiments"], queryFn: () => api.experiments() });
   const completed = (exps.data ?? []).filter((e) => e.status === "completed");
   const [sel, setSel] = useState("");
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<{ title: string; markdown: string; generated: boolean } | null>(null);
   const [del, setDel] = useState<string | null>(null);
   const qc = useQueryClient();
   const toast = useToast();
   const gen = useMutation({
     mutationFn: (id: string) => api.createReport(id),
     onSuccess: (r) => {
-      setPreview(r.markdown ?? null);
+      setPreview(r.markdown ? { title: r.title, markdown: r.markdown, generated: true } : null);
       qc.invalidateQueries({ queryKey: ["reports"] });
       toast({ tone: "success", title: "Report generated", body: r.title });
     },
     onError: (e) => toast({ tone: "error", title: "Couldn't generate the report", body: (e as Error).message }),
+  });
+  // Opening a saved report reads it; it never creates another report.
+  const open = useMutation({
+    mutationFn: async (r: { id: string; title: string }) => ({ title: r.title, markdown: await api.reportMarkdown(r.id) }),
+    onSuccess: (r) => setPreview({ ...r, generated: false }),
+    onError: (e) => toast({ tone: "error", title: "Couldn't open the report", body: (e as Error).message }),
   });
   const remove = useMutation({
     mutationFn: (id: string) => api.deleteReport(id),
@@ -37,7 +43,7 @@ export default function Reports() {
   return (
     <div>
       <PageHeader icon={<FileText className="size-5" />} title="Privacy Reports" description="Reproducible write-ups of completed experiments: configuration, metrics, privacy accounting and stated assumptions, built from stored results. Download as Markdown, standalone HTML or raw JSON." />
-      <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[400px_1fr]">
         <div className="space-y-6">
           <Panel title="Generate a report">
             {completed.length ? (
@@ -66,9 +72,23 @@ export default function Reports() {
                         {r.experiment_type ? TYPE_LABEL[r.experiment_type] : "experiment deleted"} · {ago(r.created_at)}
                       </p>
                     </div>
-                    <button aria-label={`Delete report ${r.title}`} className="rounded p-1 text-muted hover:text-rose" onClick={() => setDel(r.id)}>
-                      <Trash2 className="size-4" />
-                    </button>
+                    <div className="flex shrink-0 items-center gap-1">
+                      {r.experiment_exists && (
+                        <button
+                          type="button"
+                          aria-label={`Preview report ${r.title}`}
+                          disabled={open.isPending}
+                          onClick={() => open.mutate({ id: r.id, title: r.title })}
+                          className="inline-flex h-8 items-center gap-2 rounded-lg border border-line-strong bg-raised px-3 text-[13px] font-medium text-ink hover:border-indigo/60 disabled:opacity-60"
+                        >
+                          <Eye className="size-3.5" aria-hidden />
+                          Preview
+                        </button>
+                      )}
+                      <button aria-label={`Delete report ${r.title}`} className="rounded p-1 text-muted hover:text-rose" onClick={() => setDel(r.id)}>
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
                   </div>
                   {r.experiment_exists && (
                     <div className="mt-2 flex flex-wrap gap-2">
@@ -82,11 +102,11 @@ export default function Reports() {
             </ul>
           </Panel>
         </div>
-        <Panel title="Preview" subtitle={preview ? "Markdown source of the latest generated report" : undefined}>
+        <Panel title="Preview" subtitle={preview ? `Markdown source of ${preview.generated ? "the report just generated" : "a saved report"}: ${preview.title}` : undefined}>
           {preview ? (
-            <pre tabIndex={0} aria-label="Report preview" className="scrollbar-thin max-h-[75vh] overflow-auto whitespace-pre-wrap rounded-lg border border-line bg-bg-2 p-4 font-mono text-xs leading-relaxed text-ink-2">{preview}</pre>
+            <pre tabIndex={0} aria-label="Report preview" className="scrollbar-thin relative max-h-[75vh] overflow-auto whitespace-pre-wrap rounded-lg border border-line bg-bg-2 p-4 font-mono text-xs leading-relaxed text-ink-2">{preview.markdown}</pre>
           ) : (
-            <Empty icon={<FileText className="size-5" />} title="Nothing to preview" body="Generate a report to preview its contents here." />
+            <Empty icon={<FileText className="size-5" />} title="Nothing to preview" body="Generate a report, or choose Preview on a saved one, to see its contents here." />
           )}
         </Panel>
       </div>

@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     port: int = 8000
     cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
     # Host headers the API answers to (DNS-rebinding protection). Add a name here only if you
-    # deliberately serve Umbra under another hostname.
+    # deliberately serve Privora under another hostname.
     allowed_hosts: list[str] = ["127.0.0.1", "localhost", "[::1]"]
     max_upload_mb: int = Field(default=20, ge=1, le=500)
     max_rows: int = Field(default=200_000, ge=100)

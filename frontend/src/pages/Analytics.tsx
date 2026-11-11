@@ -7,6 +7,7 @@ import { MetricBars, MetricsTable } from "../components/shared";
 import { Empty, Panel, Spinner } from "../components/ui";
 import { api, type Experiment, type ModelResult } from "../lib/api";
 import { TYPE_LABEL } from "../lib/format";
+import { shortenAtWord } from "../lib/ticks";
 import { useChartColors } from "../lib/theme";
 
 export default function Analytics() {
@@ -18,7 +19,7 @@ export default function Analytics() {
   const c = useChartColors();
   const [pick, setPick] = useState<string[]>([]);
 
-  const allModels = useMemo(() => exps.flatMap((e) => (e.results?.models ?? []).map((m) => ({ ...m, label: `${m.label} · ${e.name.slice(0, 28)}`, _exp: e.id }))) as (ModelResult & { _exp: string })[], [exps]);
+  const allModels = useMemo(() => exps.flatMap((e) => (e.results?.models ?? []).map((m) => ({ ...m, label: `${m.label} · ${shortenAtWord(e.name, 32)}`, fullLabel: `${m.label} · ${e.name}`, _exp: e.id }))) as (ModelResult & { _exp: string; fullLabel: string })[], [exps]);
   if (dash.isLoading || list.isLoading) return <Spinner label="Loading analytics" />;
   if (!completed.length)
     return (
@@ -44,7 +45,7 @@ export default function Analytics() {
   return (
     <div className="space-y-6">
       <PageHeader icon={<BarChart3 className="size-5" />} title="Analytics" description={`Aggregated from ${completed.length} completed experiments and ${dash.data?.totals.models ?? 0} saved models.`} />
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Panel title="Privacy budget versus accuracy" subtitle="Example-level DP models (client-level runs excluded); dashed line is the best conventional model">
           {points.length ? <PrivacyUtility connect={false} label="Accuracy against epsilon for every DP model" points={points} baseline={conv.length ? Math.max(...conv.map((p) => p.accuracy!)) : undefined} /> : <p className="text-sm text-muted">No DP models yet.</p>}
         </Panel>
@@ -52,7 +53,7 @@ export default function Analytics() {
           {budgetTrend.length ? <Lines label="Epsilon and accuracy by training order" data={budgetTrend} xKey="run" series={[{ key: "epsilon", name: "ε", color: c.violet, dot: true }]} yFmt={(v) => v.toFixed(2)} xLabel="DP model #" /> : <p className="text-sm text-muted">No DP models yet.</p>}
         </Panel>
       </div>
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Panel title="Membership inference AUC by target">
           {attackPts.length ? <Bars label="Best membership inference AUC per attacked model" data={attackPts} xKey="target" series={[{ key: "auc", name: "AUC", color: c.rose }]} yDomain={[0, 1]} yFmt={(v) => v.toFixed(2)} /> : <p className="text-sm text-muted">Run the Attack Laboratory to populate this chart.</p>}
         </Panel>
@@ -68,6 +69,7 @@ export default function Analytics() {
               <button
                 key={m.model_id}
                 aria-pressed={on}
+                title={m.fullLabel}
                 onClick={() => setPick((p) => (on ? p.filter((x) => x !== m.model_id) : p.length < 6 ? [...p, m.model_id] : p))}
                 className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${on ? "border-indigo bg-indigo/15 text-ink" : "border-line text-ink-2 hover:border-line-strong"}`}
               >
@@ -76,7 +78,7 @@ export default function Analytics() {
             );
           })}
         </div>
-        <div className="grid gap-6 2xl:grid-cols-[1fr_1.2fr]">
+        <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[1fr_1.2fr]">
           <MetricBars models={compareModels} height={280} />
           <MetricsTable models={compareModels} />
         </div>

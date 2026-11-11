@@ -20,6 +20,19 @@ BASE = "http://127.0.0.1:8000"
 OUT = Path(__file__).resolve().parents[1] / "docs" / "results" / "experiments.json"
 
 
+def configure_console() -> None:
+    """Never crash on console output.
+
+    On Windows, piped or redirected stdout uses the legacy code page (e.g. cp1252), which cannot
+    encode the Greek epsilon in experiment names. Keep the stream's encoding but write any
+    character it cannot represent as a backslash escape instead of raising UnicodeEncodeError.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(errors="backslashreplace")
+
+
 def call(method: str, path: str, body: dict[str, Any] | None = None) -> Any:
     if not path.startswith("/api/"):
         raise ValueError("path must be an /api/ route")
@@ -35,7 +48,8 @@ def call(method: str, path: str, body: dict[str, Any] | None = None) -> Any:
 
 def run(body: dict[str, Any]) -> dict[str, Any]:
     e = call("POST", "/api/experiments", body)
-    print(f"→ {body['name']} ({e['id'][:8]})", flush=True)
+    # ASCII only: on Windows, piped or redirected output uses the legacy code page (e.g. cp1252).
+    print(f"-> {body['name']} ({e['id'][:8]})", flush=True)
     while True:
         time.sleep(2)
         e = call("GET", f"/api/experiments/{e['id']}")
@@ -51,6 +65,7 @@ def run(body: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> int:
+    configure_console()
     ds = call("POST", "/api/datasets/synthetic", {"key": "patients", "n": 4000, "seed": 7})
     data = {"dataset_id": ds["id"], "target": "high_risk"}
     model = {"hidden": [64, 32], "epochs": 15, "batch_size": 128, "lr": 0.002, "seed": 42}

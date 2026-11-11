@@ -1,6 +1,6 @@
 # Architecture
 
-Umbra is a local, single-user application: a Python backend that does all data handling,
+Privora is a local, single-user application: a Python backend that does all data handling,
 training, privacy accounting and attacks, and a React single-page app that drives it over a
 JSON API. Nothing leaves the machine.
 

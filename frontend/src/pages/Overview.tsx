@@ -43,11 +43,11 @@ export default function Overview() {
       {/* Hero: the privacy ledger for this workspace */}
       <section className="panel relative overflow-hidden">
         <div className="pointer-events-none absolute -right-24 -top-24 size-[420px] rounded-full opacity-60 blur-3xl" style={{ background: "radial-gradient(circle, color-mix(in srgb, var(--c-violet) 30%, transparent), transparent 65%)" }} aria-hidden />
-        <div className="relative grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.25fr_1fr]">
+        <div className="relative grid grid-cols-1 gap-8 p-6 sm:p-8 lg:grid-cols-[1.25fr_1fr]">
           <div>
             <div className="flex items-center gap-3">
               <BrandMark className="size-10" />
-              <span className="text-sm text-ink-2">Umbra workspace</span>
+              <span className="text-sm text-ink-2">Privora workspace</span>
             </div>
             <h1 className="mt-5 max-w-xl text-[32px] font-semibold leading-[1.15] tracking-tight text-ink sm:text-[38px]">Train on sensitive data, and measure what the model gives away.</h1>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-2">
@@ -110,7 +110,7 @@ export default function Overview() {
         <Stat label="Reports" value={t.reports} icon={<FileText className="size-4" />} />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.5fr_1fr]">
         <Panel title="Privacy versus accuracy" subtitle="Every example-level DP model trained in this workspace">
           {dpPoints.length ? (
             <PrivacyUtility connect={false} label="Accuracy of each differentially private model against its epsilon" points={dpPoints} baseline={bestConv} />
@@ -131,7 +131,7 @@ export default function Overview() {
         </Panel>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_1.5fr]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_1.5fr]">
         <Panel title="Attack resistance" subtitle="Best membership-inference AUC per target model">
           {d.attacks.length ? (
             <ul className="space-y-3">
@@ -155,7 +155,7 @@ export default function Overview() {
           )}
         </Panel>
         <Panel title="Start something">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {ACTIONS.map(({ to, icon: Icon, title, body }) => (
               <Link key={to} to={to} className="group rounded-xl border border-line bg-bg-2 p-4 transition-colors hover:border-indigo/50 hover:bg-raised">
                 <Icon className="size-5 text-indigo" aria-hidden />

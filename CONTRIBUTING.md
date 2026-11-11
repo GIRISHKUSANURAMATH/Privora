@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in Umbra.
+Thanks for your interest in Privora.
 
 ## Development setup
 

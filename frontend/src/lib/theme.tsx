@@ -5,7 +5,7 @@ const Ctx = createContext<{ theme: Theme; setTheme: (t: Theme) => void }>({ them
 
 function readStored(): Theme {
   try {
-    const v = localStorage.getItem("umbra-theme");
+    const v = localStorage.getItem("privora-theme");
     return v === "light" ? "light" : "dark";
   } catch {
     return "dark";
@@ -17,7 +17,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try {
-      localStorage.setItem("umbra-theme", theme);
+      localStorage.setItem("privora-theme", theme);
     } catch {
       /* storage unavailable: theme still applies for this session */
     }

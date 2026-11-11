@@ -10,6 +10,7 @@ import { Badge, Button, Confirm, Empty, ErrorNote, NumberInput, Panel, Select, S
 import { api, type ColumnStat, type Finding } from "../lib/api";
 import { ago, int } from "../lib/format";
 import { useChartColors } from "../lib/theme";
+import { shortenAtWord } from "../lib/ticks";
 
 export default function DatasetStudio() {
   const ds = useDatasets();
@@ -22,7 +23,7 @@ export default function DatasetStudio() {
   return (
     <div>
       <PageHeader icon={<Database className="size-5" />} title="Dataset Studio" description="Bring data in, check its quality and see which columns are sensitive before anything is trained on it." />
-      <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[360px_1fr]">
         <div className="space-y-6">
           <Ingest onCreated={setSel} />
           <Panel title="Datasets" subtitle={ds.data ? `${ds.data.length} stored locally` : undefined} bodyClass="p-2">
@@ -195,9 +196,9 @@ function DatasetDetail({ id }: { id: string }) {
         <Stat label="Duplicate rows" value={int(p.duplicate_rows)} tone={p.duplicate_rows ? "amber" : "signal"} />
       </div>
 
-      <div className="grid gap-6 2xl:grid-cols-[1.3fr_1fr]">
+      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-[1.3fr_1fr]">
         <Panel title="Columns" subtitle="Select a column to see its distribution" bodyClass="p-0">
-          <div className="scrollbar-thin max-h-[440px] overflow-auto" tabIndex={0} role="region" aria-label="Column statistics">
+          <div className="scrollbar-thin relative max-h-[440px] overflow-auto" tabIndex={0} role="region" aria-label="Column statistics">
             <table className="w-full min-w-[640px] text-left text-[13px]">
               <thead className="sticky top-0 bg-surface text-muted">
                 <tr className="border-b border-line">
@@ -244,13 +245,22 @@ function DatasetDetail({ id }: { id: string }) {
   );
 }
 
+/* Bin start labels with enough decimals for the bin width (1.5-wide bins printed "16" for 16.5). */
+export function histogramRows(h: { edges: number[]; counts: number[] }) {
+  const width = h.edges.length > 1 ? Math.abs(h.edges[1] - h.edges[0]) : 1;
+  // Fewest decimals (max 4) whose rounding error stays within 2 % of a bin.
+  let decimals = 0;
+  while (decimals < 4 && h.edges.some((e) => Math.abs(Number(e.toFixed(decimals)) - e) > width * 0.02)) decimals++;
+  return h.counts.map((v, i) => ({ bin: h.edges[i].toFixed(decimals), v }));
+}
+
 function ColumnPanel({ s }: { s: ColumnStat }) {
   const c = useChartColors();
   return (
     <Panel title={s.name} subtitle={`${s.kind} · ${s.dtype}`}>
       {s.histogram ? (
         <>
-          <Bars label={`Distribution of ${s.name}`} data={s.histogram.counts.map((v, i) => ({ bin: s.histogram!.edges[i].toFixed(s.histogram!.edges[1] - s.histogram!.edges[0] < 1 ? 2 : 0), v }))} xKey="bin" series={[{ key: "v", name: "Rows", color: c.blue }]} height={180} />
+          <Bars label={`Distribution of ${s.name}`} data={histogramRows(s.histogram)} xKey="bin" series={[{ key: "v", name: "Rows", color: c.blue }]} height={180} labelEvery={Math.ceil(s.histogram.counts.length / 5)} />
           <div className="num mt-3 grid grid-cols-3 gap-2 text-xs text-muted">
             <span>mean <b className="font-medium text-ink">{s.mean?.toFixed(2)}</b></span>
             <span>median <b className="font-medium text-ink">{s.median?.toFixed(2)}</b></span>
@@ -260,7 +270,7 @@ function ColumnPanel({ s }: { s: ColumnStat }) {
           </div>
         </>
       ) : (
-        <Bars label={`Most frequent values of ${s.name}`} data={(s.top_values ?? []).map((t) => ({ v: t.value.length > 16 ? t.value.slice(0, 15) + "…" : t.value, n: t.count }))} xKey="v" layout="vertical" series={[{ key: "n", name: "Rows", color: c.indigo }]} height={Math.max(140, (s.top_values?.length ?? 1) * 26)} />
+        <Bars label={`Most frequent values of ${s.name}`} data={(s.top_values ?? []).map((t) => ({ v: shortenAtWord(t.value, 16), n: t.count }))} xKey="v" layout="vertical" series={[{ key: "n", name: "Rows", color: c.indigo }]} height={Math.max(140, (s.top_values?.length ?? 1) * 26)} />
       )}
     </Panel>
   );
@@ -286,7 +296,7 @@ function Preview({ id }: { id: string }) {
       bodyClass="p-0"
     >
       {q.data ? (
-        <div className="scrollbar-thin overflow-x-auto" tabIndex={0} role="region" aria-label="Dataset preview rows">
+        <div className="scrollbar-thin relative overflow-x-auto" tabIndex={0} role="region" aria-label="Dataset preview rows">
           <table className="w-full text-left text-xs">
             <thead className="bg-bg-2 text-muted">
               <tr>

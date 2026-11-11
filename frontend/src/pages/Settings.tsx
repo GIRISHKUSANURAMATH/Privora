@@ -12,7 +12,7 @@ export default function Settings() {
   return (
     <div>
       <PageHeader icon={<Gear className="size-5" />} title="Settings" description="Appearance, the runtime this backend is using, and the safety limits applied to uploads and jobs. Limits are set with PPML_* environment variables (see .env.example)." />
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Panel title="Appearance">
           <div className="space-y-4">
             <Segmented ariaLabel="Theme" value={theme} onChange={setTheme} options={[{ value: "dark", label: "Dark" }, { value: "light", label: "Light" }]} />
@@ -43,7 +43,7 @@ export default function Settings() {
           {sys.data && (
             <KV
               items={[
-                ["Umbra", sys.data.version],
+                ["Privora", sys.data.version],
                 ["Python", sys.data.python],
                 ["PyTorch", sys.data.torch],
                 ["Opacus", sys.data.opacus],

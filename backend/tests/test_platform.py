@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
@@ -55,6 +56,94 @@ def test_check_env_script_runs() -> None:
     for name in ("torch", "opacus", "sklearn", "fastapi", "pandas", "numpy"):
         assert name in out.stdout
     assert re.search(r"cuda_available=(True|False)", out.stdout)
+
+
+# --------------------------------------- Windows code page: piped output must be encodable
+# On Windows, Python writes piped or redirected stdout in the legacy code page (e.g. cp1252).
+# run_experiments.py printed "→", which raised UnicodeEncodeError when capture_screenshots.py
+# ran under the release check, so no screenshot was taken.
+OUTPUT_CALLS = {"print", "write", "debug", "info", "warning", "error", "exception", "critical"}
+
+
+def _non_ascii_output_strings(path: Path) -> list[str]:
+    import ast
+
+    hits = []
+    for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+        if not isinstance(node, ast.Call):
+            continue
+        name = getattr(node.func, "id", None) or getattr(node.func, "attr", None)
+        if name not in OUTPUT_CALLS:
+            continue
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Constant) and isinstance(sub.value, str) and not sub.value.isascii():
+                hits.append(f"{path.relative_to(ROOT)}:{sub.lineno}: {sub.value!r}")
+    return hits
+
+
+def test_console_output_strings_are_ascii() -> None:
+    files = sorted((ROOT / "scripts").glob("*.py")) + sorted((ROOT / "backend" / "ppml").rglob("*.py"))
+    assert len(files) > 20
+    hits = [h for f in files for h in _non_ascii_output_strings(f)]
+    message = "non-ASCII text in console/log output breaks piped output on Windows:\n"
+    assert hits == [], message + "\n".join(hits)
+
+
+_PRINT_EXPERIMENT_NAME = (
+    "import sys; sys.path.insert(0, sys.argv[1]); import run_experiments as rx; "
+    "{setup}print('-> ' + 'Experiment A \\u00b7 Conventional vs DP (\\u03b5=3)', flush=True)"
+)
+
+
+def _run_with_cp1252(code: str) -> subprocess.CompletedProcess[str]:
+    env = {**os.environ, "PYTHONIOENCODING": "cp1252"}
+    return subprocess.run(  # noqa: S603 - fixed interpreter, code defined in this test
+        [sys.executable, "-c", code, str(ROOT / "scripts")],
+        capture_output=True,
+        text=True,
+        encoding="cp1252",
+        errors="strict",
+        timeout=120,
+        check=False,
+        env=env,
+    )
+
+
+def test_experiment_names_crash_a_cp1252_pipe_without_the_fix() -> None:
+    """Sanity check that the test reproduces the Windows failure (data, not code, is non-ASCII)."""
+    out = _run_with_cp1252(_PRINT_EXPERIMENT_NAME.format(setup=""))
+    assert out.returncode != 0 and "UnicodeEncodeError" in out.stderr
+
+
+def test_configure_console_makes_experiment_names_safe_on_cp1252() -> None:
+    out = _run_with_cp1252(_PRINT_EXPERIMENT_NAME.format(setup="rx.configure_console(); "))
+    assert out.returncode == 0, out.stderr
+    assert "\\u03b5=3" in out.stdout
+
+
+@pytest.mark.parametrize("script", ["run_experiments.py", "capture_screenshots.py"])
+def test_script_entry_points_configure_the_console_first(script: str) -> None:
+    import ast
+
+    tree = ast.parse((ROOT / "scripts" / script).read_text(encoding="utf-8"))
+    main = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "main")
+    first = main.body[0]
+    assert isinstance(first, ast.Expr) and isinstance(first.value, ast.Call)
+    func = first.value.func
+    assert (getattr(func, "id", None) or getattr(func, "attr", None)) == "configure_console"
+
+
+def test_check_env_runs_with_a_legacy_windows_code_page() -> None:
+    env = {**os.environ, "PYTHONIOENCODING": "cp1252"}
+    out = subprocess.run(  # noqa: S603 - fixed interpreter and repository script
+        [sys.executable, str(ROOT / "scripts" / "check_env.py")],
+        capture_output=True,
+        text=True,
+        timeout=120,
+        check=False,
+        env=env,
+    )
+    assert out.returncode == 0, out.stdout + out.stderr
 
 
 def test_verify_uses_check_env_script() -> None:

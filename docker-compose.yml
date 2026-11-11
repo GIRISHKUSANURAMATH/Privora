@@ -1,12 +1,12 @@
 services:
-  umbra:
+  privora:
     build: .
-    image: umbra-ppml:1.0.0
+    image: privora:1.0.0
     # Published on the loopback interface only: the API has no authentication.
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
-      - umbra-data:/data
+      - privora-data:/data
     environment:
       PPML_MAX_UPLOAD_MB: "20"
       PPML_MAX_CONCURRENT_JOBS: "1"
@@ -17,4 +17,4 @@ services:
       - no-new-privileges:true
     restart: unless-stopped
 volumes:
-  umbra-data:
+  privora-data:

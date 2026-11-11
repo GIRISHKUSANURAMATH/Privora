@@ -88,7 +88,7 @@ function Inspector({ id }: { id: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div className="panel p-4">
           <p className="text-[13px] text-muted">Re-identification risk</p>
           <div className="mt-2 flex items-end gap-3">
@@ -122,7 +122,7 @@ function Inspector({ id }: { id: string }) {
         }
         bodyClass="p-0"
       >
-        <div className="scrollbar-thin overflow-x-auto" tabIndex={0} role="region" aria-label="Findings and protections">
+        <div className="scrollbar-thin relative overflow-x-auto" tabIndex={0} role="region" aria-label="Findings and protections">
           <table className="w-full min-w-[900px] text-left text-[13px]">
             <thead className="text-muted">
               <tr className="border-b border-line">
@@ -221,7 +221,7 @@ function Glossary() {
     ["Differential privacy", "A mathematical bound (ε, δ) on how much any one record can change an output. Local DP noises each record; central DP noises the model or statistic."],
   ];
   return (
-    <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-label="Privacy techniques explained">
+    <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4" aria-label="Privacy techniques explained">
       {items.map(([t, b]) => (
         <div key={t} className="rounded-xl border border-line bg-surface/60 p-4">
           <p className="text-sm font-medium text-ink">{t}</p>

@@ -45,7 +45,7 @@ export function DatasetPicker({ value, onChange, requireTarget = true }: { value
     );
   const cols = detail.data?.profile.column_stats.map((c) => c.name) ?? [];
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <Field label="Dataset" htmlFor="ds-pick">
         <Select
           id="ds-pick"
@@ -190,7 +190,7 @@ export function RunButton({ onClick, loading, disabled, children = "Run experime
 /* ------------------------------------------------------------------ metrics */
 export function MetricsTable({ models }: { models: ModelResult[] }) {
   return (
-    <div className="scrollbar-thin overflow-x-auto" tabIndex={0} role="region" aria-label="Model metrics table">
+    <div className="scrollbar-thin relative overflow-x-auto" tabIndex={0} role="region" aria-label="Model metrics table">
       <table className="w-full min-w-[720px] text-left text-[13px]">
         <caption className="sr-only">Held-out test metrics per model</caption>
         <thead>
@@ -266,7 +266,7 @@ export function TrainingCurves({ models }: { models: ModelResult[] }) {
     return r;
   });
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <div>
         <p className="mb-2 text-[13px] font-medium text-ink-2">Test accuracy per epoch</p>
         <Lines label="Test accuracy per epoch" data={data} xKey="epoch" yFmt={(v) => `${(v * 100).toFixed(0)}%`} series={withHist.map((m, j) => ({ key: `a${j}`, name: m.label, color: palette[j % palette.length] }))} />

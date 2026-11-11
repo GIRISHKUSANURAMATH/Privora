@@ -8,7 +8,7 @@
 
 ## Scope and intended use
 
-Umbra is a **local, single-user research tool**. It binds to `127.0.0.1`, has **no
+Privora is a **local, single-user research tool**. It binds to `127.0.0.1`, has **no
 authentication**, and must not be exposed on a network or used as a production service.
 See [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) for assets, mitigations and residual risks.
 

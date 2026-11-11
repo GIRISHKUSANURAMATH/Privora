@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start Umbra on Linux/macOS: backend serves the built UI on http://127.0.0.1:8000
+# Start Privora on Linux/macOS: backend serves the built UI on http://127.0.0.1:8000
 set -euo pipefail
 cd "$(dirname "$0")"
 [ -x .venv/bin/python ] || { echo "Run setup first (see docs/INSTALLATION.md)"; exit 1; }

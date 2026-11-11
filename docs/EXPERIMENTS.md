@@ -164,5 +164,6 @@ Wall-clock seconds per experiment on 2 CPU cores: A 3.0, B 12.3, C 3.7, C2 21.3,
 * One synthetic dataset, one seed per configuration; differences under ~1 pt are within noise.
 * The privacy accounting excludes preprocessing statistics and hyper-parameter selection
   (see `PRIVACY_METHODOLOGY.md`).
-* Attack results are lower bounds on leakage for the attacks implemented; stronger attacks
-  (e.g. LiRA with many shadow models) could do better against the conventional model.
+* Attack results measure only the attacks implemented. They are not a bound on leakage:
+  stronger attacks (e.g. LiRA with many shadow models) could do better against the
+  conventional model.

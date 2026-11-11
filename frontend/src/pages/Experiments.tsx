@@ -33,7 +33,7 @@ export default function Experiments() {
       />
       {showNew && <NewBaseline onStarted={(id) => { setParams({ id }); setShowNew(false); }} />}
       <Tabs value={filter} onChange={setFilter} tabs={[{ value: "all", label: "All", count: list.data?.length }, ...Object.keys(TYPE_LABEL).filter((k) => counts[k]).map((k) => ({ value: k, label: TYPE_LABEL[k], count: counts[k] }))]} />
-      <div className="mt-6 grid gap-6 xl:grid-cols-[340px_1fr]">
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[340px_1fr]">
         <Panel bodyClass="p-2" className="self-start">
           {list.isLoading && <Spinner />}
           {list.error && <ErrorNote error={list.error} />}
@@ -114,7 +114,7 @@ function Detail({ id, onDeleted }: { id: string; onDeleted: () => void }) {
       <Confirm open={confirm} danger title="Delete this experiment?" body="Its stored results are removed. Saved model files stay on disk." confirmLabel="Delete experiment" onConfirm={() => del.mutate()} onClose={() => setConfirm(false)} />
       <RunStatus exp={e} hideOpen />
       <Panel title="Configuration">
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {cfg.data && <KV items={Object.entries(cfg.data).filter(([, v]) => v != null && !(Array.isArray(v) && !v.length)).map(([k, v]) => [k, Array.isArray(v) ? v.join(", ") : String(v)])} />}
           <KV items={Object.entries({ ...(cfg.model ?? {}), ...(cfg.dp ?? {}), ...(cfg.federated ?? {}), ...(cfg.attack ?? {}), ...(cfg.sweep ?? {}) }).filter(([, v]) => v != null).map(([k, v]) => [k, Array.isArray(v) ? v.join(", ") : String(v)])} />
         </div>
@@ -147,7 +147,7 @@ function SavedModels() {
       actions={ds.data?.length ? <div className="w-64"><Select ariaLabel="Dataset for evaluation" value={dsId || ds.data[0].id} onChange={setDsId} options={ds.data.map((d) => ({ value: d.id, label: d.name }))} /></div> : undefined}
       bodyClass="p-0"
     >
-      <div className="scrollbar-thin max-h-[420px] overflow-auto" tabIndex={0} role="region" aria-label="Saved model artifacts">
+      <div className="scrollbar-thin relative max-h-[420px] overflow-auto" tabIndex={0} role="region" aria-label="Saved model artifacts">
         <table className="num w-full min-w-[760px] text-left text-[13px]">
           <thead className="sticky top-0 bg-surface text-muted">
             <tr className="border-b border-line">

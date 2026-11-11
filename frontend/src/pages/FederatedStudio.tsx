@@ -45,12 +45,12 @@ export default function FederatedStudio() {
         title="Federated Learning Studio"
         description="Split the data across simulated clients, train locally, and let a coordinator average their updates with FedAvg. Raw rows never leave a client; updates still can leak, which is what the DP options address."
       />
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div className="space-y-6">
           <Panel title="Data and clients">
             <div className="space-y-5">
               <DatasetPicker value={data} onChange={setData} />
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <Field label="Clients" htmlFor="fl-k">
                   <Slider id="fl-k" label="Number of clients" min={2} max={30} step={1} value={clients} onChange={setClients} />
                 </Field>
@@ -64,7 +64,7 @@ export default function FederatedStudio() {
                   <Slider id="fl-le" label="Local epochs" min={1} max={10} step={1} value={localEpochs} onChange={setLocalEpochs} />
                 </Field>
               </div>
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <Field label="Partition">
                   <Segmented ariaLabel="Data partition" value={partition} onChange={setPartition} options={[{ value: "iid", label: "IID" }, { value: "dirichlet", label: "Non-IID (Dirichlet)" }]} />
                 </Field>
@@ -97,7 +97,7 @@ export default function FederatedStudio() {
                 {privacy === "local_dp_sgd" && "Each client trains with DP-SGD via Opacus, so its update is example-level private before it leaves the client, even against a curious server. ε is reported per client."}
               </p>
               {privacy !== "none" && (
-                <div className="grid gap-4 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <Field label={privacy === "client_dp" ? "Noise multiplier z" : "Noise multiplier σ"} htmlFor="fl-z">
                     <NumberInput id="fl-z" value={noise} min={0.05} max={50} step={0.1} onChange={setNoise} />
                   </Field>

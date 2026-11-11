@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Verify the Umbra installation: environment, structure, tests, lint, types, security, smoke tests.
+  Verify the Privora installation: environment, structure, tests, lint, types, security, smoke tests.
   Exits 0 when no check failed, 1 otherwise. Never deletes user files.
 
 .PARAMETER Quick
@@ -38,7 +38,7 @@ function Invoke-Check([string]$Name, [string]$Exe, [string[]]$Arguments, [string
     }
 }
 
-Write-Host 'Umbra verification' -ForegroundColor Magenta
+Write-Host 'Privora verification' -ForegroundColor Magenta
 
 # ---------------------------------------------------------------- environment
 Write-Step 'Environment'

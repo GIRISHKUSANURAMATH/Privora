@@ -84,7 +84,7 @@ export default function DPStudio() {
         title="Differential Privacy Studio"
         description="Train with DP-SGD through Opacus. Per-example gradients are clipped to norm C, Gaussian noise σ·C is added, and a privacy accountant composes every step into a single (ε, δ) guarantee."
       />
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         <div className="space-y-6">
           <Panel title="Experiment">
             <div className="space-y-5">
@@ -125,7 +125,7 @@ export default function DPStudio() {
                   )}
                 </>
               )}
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <Field label={<>δ <Tip>Probability that the ε bound fails. Must be well below 1/n; a common choice is 1e-5 or smaller.</Tip></>} htmlFor="delta" hint={nTrain ? `must be < 1/n = ${(1 / nTrain).toExponential(1)}` : undefined}>
                   <NumberInput id="delta" value={delta} min={1e-12} max={0.1} step={1e-6} onChange={setDelta} />
                 </Field>

@@ -24,7 +24,7 @@ export function TrainingView({ r }: { r: Results }) {
       <Panel title="Held-out test performance" subtitle={r.data ? `${int(r.data.n_train)} training rows, ${int(r.data.n_test)} test rows, ${r.data.n_features} encoded features` : undefined}>
         <MetricsTable models={models} />
       </Panel>
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Panel title="Precision, recall and F1">
           <MetricBars models={models} />
         </Panel>
@@ -49,7 +49,7 @@ export function TrainingView({ r }: { r: Results }) {
       </Panel>
       {dpModels.map((m) => (
         <Panel key={m.model_id} title={`Privacy accounting · ${m.label}`} subtitle="Computed by Opacus during training; nothing here is estimated by the UI.">
-          <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1fr]">
             <PrivacyLedger m={m} />
             {m.privacy?.clip_fraction_per_epoch && (
               <div>
@@ -71,7 +71,7 @@ export function SweepView({ r }: { r: Results }) {
   const curve = r.curve ?? [];
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_1fr]">
         <Panel title="Privacy versus utility" subtitle="Each point is a separate DP-SGD training run with its own accountant.">
           <PrivacyUtility label="Test accuracy against achieved epsilon" points={curve.map((p) => ({ epsilon: p.epsilon, accuracy: p.accuracy, name: `ε=${p.target_epsilon}` }))} baseline={r.baseline_accuracy} />
         </Panel>
@@ -80,7 +80,7 @@ export function SweepView({ r }: { r: Results }) {
         </Panel>
       </div>
       <Panel title="Sweep results">
-        <div className="scrollbar-thin overflow-x-auto" tabIndex={0} role="region" aria-label="Sweep results">
+        <div className="scrollbar-thin relative overflow-x-auto" tabIndex={0} role="region" aria-label="Sweep results">
           <table className="num w-full min-w-[640px] text-left text-[13px]">
             <thead className="text-muted">
               <tr className="border-b border-line">
@@ -136,7 +136,7 @@ export function FederatedView({ r }: { r: Results }) {
           Clients never upload raw records, but the model updates they send can still leak information about those records. Use client-level DP or local DP-SGD for a measurable guarantee.
         </Callout>
       )}
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Panel title="Global model across rounds">
           <Lines label="Global test accuracy and F1 per federated round" data={rounds} xKey="round" series={[{ key: "acc", name: "Accuracy", color: c.signal, dot: true }, { key: "f1", name: "F1", color: c.blue }]} yFmt={(v) => `${(v * 100).toFixed(0)}%`} refY={central ? { y: central.test.accuracy, label: "Centralized", color: c.muted } : undefined} />
         </Panel>
@@ -178,7 +178,7 @@ export function FederatedView({ r }: { r: Results }) {
         </div>
       </Panel>
       <Panel title="Communication and privacy details">
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <KV
             items={[
               ["Parameters per model", int(f.communication.parameters)],
@@ -207,7 +207,7 @@ export function FederatedView({ r }: { r: Results }) {
 
 function ParticipationGrid({ f }: { f: FedResult }) {
   return (
-    <div className="scrollbar-thin overflow-x-auto" tabIndex={0} role="region" aria-label="Client participation grid">
+    <div className="scrollbar-thin relative overflow-x-auto" tabIndex={0} role="region" aria-label="Client participation grid">
       <table className="border-separate" style={{ borderSpacing: 3 }}>
         <thead>
           <tr>
@@ -293,7 +293,7 @@ export function AttackView({ r }: { r: Results }) {
           );
         })}
       </div>
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Panel title="ROC curves · best attack per target" subtitle="Evaluation half only; thresholds were fit on a disjoint calibration half.">
           <ROC
             label="Membership inference ROC curves"
@@ -307,7 +307,7 @@ export function AttackView({ r }: { r: Results }) {
           <Bars label="Attack AUC by technique and target model" data={aucData} xKey="attack" series={models.map((m, i) => ({ key: `m${i}`, name: m.label, color: palette[i % palette.length] }))} yDomain={[0, 1]} yFmt={(v) => v.toFixed(2)} height={300} />
         </Panel>
       </div>
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Panel title="Precision, recall and advantage" subtitle="At the calibrated threshold of each target's strongest attack">
           <Bars label="Attack precision, recall and membership advantage" data={prData} xKey="model" series={[{ key: "precision", name: "Precision", color: c.indigo }, { key: "recall", name: "Recall", color: c.blue }, { key: "advantage", name: "Advantage (TPR−FPR)", color: c.rose }]} yDomain={[0, 1]} yFmt={(v) => v.toFixed(2)} />
         </Panel>
@@ -316,7 +316,7 @@ export function AttackView({ r }: { r: Results }) {
         </Panel>
       </div>
       <Panel title="All attack metrics">
-        <div className="scrollbar-thin overflow-x-auto" tabIndex={0} role="region" aria-label="All attack metrics">
+        <div className="scrollbar-thin relative overflow-x-auto" tabIndex={0} role="region" aria-label="All attack metrics">
           <table className="num w-full min-w-[860px] text-left text-[13px]">
             <thead className="text-muted">
               <tr className="border-b border-line">
@@ -397,14 +397,14 @@ export function SampleCompare({ report, highlight }: { report: TransformReport; 
     return v == null ? <span className="text-muted">null</span> : String(v);
   };
   return (
-    <div className="grid gap-4 2xl:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 2xl:grid-cols-2">
       {(["Before", "After"] as const).map((label) => {
         const rows = label === "Before" ? report.sample_before : report.sample_after;
         const show = label === "Before" ? cols : report.columns_after;
         return (
           <div key={label} className="min-w-0">
             <p className="mb-2 text-[13px] font-medium text-ink-2">{label}</p>
-            <div className="scrollbar-thin overflow-x-auto rounded-lg border border-line" tabIndex={0} role="region" aria-label={`Sample rows ${label.toLowerCase()} protection`}>
+            <div className="scrollbar-thin relative overflow-x-auto rounded-lg border border-line" tabIndex={0} role="region" aria-label={`Sample rows ${label.toLowerCase()} protection`}>
               <table className="w-full text-left text-xs">
                 <thead className="bg-bg-2 text-muted">
                   <tr>
@@ -441,7 +441,7 @@ export function KAnonCompare({ report }: { report: TransformReport }) {
   const a = report.k_anonymity_after;
   const data = b.class_size_distribution.map((x, i) => ({ bucket: `k ${x.bucket}`, before: x.records, after: a.class_size_distribution[i]?.records ?? 0 }));
   return (
-    <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
       <div className="space-y-3">
         <KV
           items={[

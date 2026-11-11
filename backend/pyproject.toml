@@ -3,9 +3,9 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "umbra-ppml"
+name = "privora"
 version = "1.0.0"
-description = "Umbra — a privacy-preserving machine learning framework (DP-SGD, federated learning, privacy attacks)"
+description = "Privora — a privacy-preserving machine learning framework (DP-SGD, federated learning, privacy attacks)"
 readme = "../README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

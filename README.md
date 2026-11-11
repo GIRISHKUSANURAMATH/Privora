@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="frontend/public/mark.svg" width="72" alt="Umbra logo" />
+<img src="frontend/public/mark.svg" width="72" alt="Privora logo" />
 
-# Umbra — Privacy-Preserving Machine Learning Framework
+# Privora — Privacy-Preserving Machine Learning Framework
 
 **Train models on sensitive data with differential privacy and federated learning, then attack them to measure what still leaks.**
 
@@ -13,7 +13,7 @@
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-<img src="assets/screenshots/01-overview.png" alt="Umbra overview dashboard" width="900" />
+<img src="assets/screenshots/01-overview.png" alt="Privora overview dashboard" width="900" />
 
 </div>
 
@@ -35,7 +35,7 @@ records can reveal whether a particular person was in the training set (membersh
 inference) or expose their attributes, even if the raw data is never published. Masking a few
 columns or "keeping data on device" does not fix this by itself.
 
-Umbra is a local, research-oriented platform that puts the main defences and the main attacks
+Privora is a local, research-oriented platform that puts the main defences and the main attacks
 side by side, so their effects can be **measured** rather than assumed:
 
 * **Differential privacy** (DP-SGD via Opacus) with real privacy accounting.
@@ -103,7 +103,8 @@ No paid APIs, no cloud services, no internet access needed after installation.
 ### Windows
 
 ```powershell
-cd path\to\your\clone          # the folder that contains setup.ps1
+git clone https://github.com/GIRISHKUSANURAMATH/Privora.git
+cd Privora                     # the folder that contains setup.ps1
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass   # only if scripts are blocked
 .\setup.ps1        # venv + Python packages + UI build   (add -Cuda for an NVIDIA GPU)
 ```
@@ -111,6 +112,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass   # only if scripts a
 ### Linux (macOS untested)
 
 ```bash
+git clone https://github.com/GIRISHKUSANURAMATH/Privora.git && cd Privora
 python3 -m venv .venv
 .venv/bin/pip install torch --index-url https://download.pytorch.org/whl/cpu   # CPU wheel; skip on macOS
 .venv/bin/pip install -r requirements.txt -r requirements-dev.txt
@@ -148,7 +150,7 @@ Reports.
 ## Differential privacy
 
 A mechanism is (ε, δ)-DP if adding or removing any one record changes the probability of any
-output by at most a factor e^ε, plus δ. Umbra's DP-SGD clips each per-example gradient to norm
+output by at most a factor e^ε, plus δ. Privora's DP-SGD clips each per-example gradient to norm
 C, adds Gaussian noise σ·C, samples batches by Poisson sampling, and composes all steps with
 Opacus' **RDP** accountant (or **PRV**). In target-ε mode the noise multiplier is found by
 search; ε reported after training is read back from the accountant, and a test recomputes it
@@ -245,7 +247,8 @@ any target (reported as a negative result).
 ## Screenshots
 
 All captured from the running application with real experiment data
-(more in [`assets/screenshots/`](assets/screenshots/)).
+(more in [`assets/screenshots/`](assets/screenshots/)). Regenerate them from a fresh, isolated
+instance with `scripts/capture_screenshots.py` (instructions at the top of the script).
 
 | | |
 |---|---|
@@ -263,14 +266,14 @@ All captured from the running application with real experiment data
 
 | Check | Result (this build) |
 |---|---|
-| pytest (data, PII, transforms, DP-SGD, accounting, FedAvg, attacks, artifacts, API, security, cross-platform) | 98 passed, 0 failed, 0 skipped |
-| Vitest (format helpers, API client errors, accessible components, navigation regression) | 9 passed |
+| pytest (data, PII, transforms, DP-SGD, accounting, FedAvg, attacks, artifacts, API, security, cross-platform, Windows console encoding, screenshot checks) | 118 passed, 0 failed, 0 skipped (8 browser-based screenshot-check tests skip if Playwright is not installed) |
+| Vitest (format helpers, API client errors, accessible components, navigation, responsive-layout, chart-axis and report-preview regressions) | 37 passed |
 | Smoke tests (ML, DP, FL, attack, PII, reload, report) | 7 / 7 |
-| Ruff lint + format · mypy for Windows, Linux and macOS (34 files) | clean |
+| Ruff lint + format · mypy for Windows, Linux and macOS (35 files) | clean |
 | Bandit (4.0 k LOC) | 0 issues (5 reviewed `nosec` on allow-listed SQL identifiers) |
 | pip-audit · npm audit | 0 known vulnerabilities |
-| Browser: 11 pages, 4 viewports, 2 themes + 12-step workflow from an empty install | 0 console errors, 0 horizontal overflow |
-| Accessibility: axe-core 4.14, WCAG 2.1 A/AA + best practice, all pages, both themes, result views, mobile drawer | 0 violations |
+| Browser: 11 pages at 390 px and 820 px, 18 screenshot captures (390–1440 px), 12-step workflow from an empty install | 0 console errors, 0 horizontal overflow (measured against the viewport width) |
+| Accessibility: axe-core 4.14, WCAG 2.1 A/AA + best practice, all 11 pages, both themes | 0 violations |
 
 Full details, including what was **not** verified: [`docs/VERIFICATION_REPORT.md`](docs/VERIFICATION_REPORT.md).
 
@@ -313,7 +316,7 @@ This project makes **no claim of regulatory compliance** (GDPR, HIPAA, DPDP Act 
 │   └── core/                data · ml · privacy · federated · attacks · experiments · reports
 ├── backend/tests/           pytest suite
 ├── frontend/src/            React app (pages, components, lib)
-├── scripts/                 smoke tests, experiment runner, PowerShell helpers
+├── scripts/                 smoke tests, experiment runner, screenshot capture, PowerShell helpers
 ├── docs/                    architecture, threat model, methodology, experiments, API, reports
 ├── assets/screenshots/      real screenshots
 ├── setup.ps1 · run.ps1 · verify.ps1 · run.sh · verify.sh

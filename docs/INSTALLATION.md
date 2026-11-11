@@ -16,7 +16,8 @@ No paid APIs, accounts or internet access are needed after installation.
 ## Windows (PowerShell)
 
 ```powershell
-cd path\to\your\clone          # the folder that contains setup.ps1
+git clone https://github.com/GIRISHKUSANURAMATH/Privora.git
+cd Privora                     # the folder that contains setup.ps1
 
 # If script execution is blocked, allow it for this window only:
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
@@ -57,7 +58,7 @@ python3 -m venv .venv
 
 PowerShell 7 (`pwsh`) can also run the `.ps1` scripts on Linux and macOS.
 
-On macOS the default PyPI torch wheel is fine (it uses CPU/MPS; Umbra uses CPU unless CUDA is present).
+On macOS the default PyPI torch wheel is fine (it uses CPU/MPS; Privora uses CPU unless CUDA is present).
 
 ## Docker (not yet tested)
 
@@ -70,7 +71,7 @@ docker compose up --build
 ```
 
 The container runs as a non-root user with a read-only root filesystem; data is kept in the
-`umbra-data` volume. The port is published on `127.0.0.1` only.
+`privora-data` volume. The port is published on `127.0.0.1` only.
 
 ## Configuration
 
@@ -89,5 +90,5 @@ Copy `.env.example` to `.env` (setup does this) and adjust. All variables use th
 
 ## Uninstall
 
-Delete the project folder. Everything Umbra writes lives inside it (`.venv`, `data`,
+Delete the project folder. Everything Privora writes lives inside it (`.venv`, `data`,
 `frontend/node_modules`, `frontend/dist`).

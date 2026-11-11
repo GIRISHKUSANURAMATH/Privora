@@ -40,12 +40,12 @@ export default function AttackLab() {
         title="Attack Laboratory"
         description="Train target models, then attack them. Membership inference asks whether an attacker with query access can tell training records from unseen ones; attribute inference asks whether a hidden attribute can be recovered."
       />
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-6">
           <Panel title="Targets">
             <div className="space-y-5">
               <DatasetPicker value={data} onChange={setData} />
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <Field label={<>Training set size (members) <Tip>Smaller training sets overfit more and leak more. The rest of the data is split into non-members and the attacker's shadow pool.</Tip></>} htmlFor="mem">
                   <Slider id="mem" label="Members" min={200} max={2000} step={50} value={members} onChange={setMembers} />
                 </Field>

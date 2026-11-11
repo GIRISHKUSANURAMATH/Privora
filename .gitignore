@@ -9,8 +9,10 @@ __pycache__/
 build/
 dist/
 
-# Runtime data (datasets, model weights, reports, SQLite) — never commit
-data/
+# Runtime data (datasets, model weights, reports, SQLite) — never commit.
+# Anchored to the project root: an unanchored "data/" also hid the source package
+# backend/ppml/core/data/.
+/data/
 *.sqlite3
 *.sqlite3-journal
 *.pt
@@ -23,6 +25,9 @@ data/
 !.env.example
 *.pem
 *.key
+
+# Output of scripts/capture_screenshots.py (review, then copy into assets/screenshots/)
+/screenshots-capture/
 
 # Test / coverage output
 .coverage

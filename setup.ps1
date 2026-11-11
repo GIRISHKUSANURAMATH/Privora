@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  One-time setup for Umbra: Python virtual environment, backend dependencies, frontend build.
+  One-time setup for Privora: Python virtual environment, backend dependencies, frontend build.
 
 .PARAMETER Cuda
   Install the CUDA build of PyTorch (cu126) instead of the default CPU build.
@@ -19,7 +19,7 @@ param(
 . (Join-Path $PSScriptRoot 'scripts\common.ps1')
 Set-Location $Script:Root
 
-Write-Host 'Umbra - Privacy-Preserving ML Framework - setup' -ForegroundColor Magenta
+Write-Host 'Privora - Privacy-Preserving ML Framework - setup' -ForegroundColor Magenta
 
 Write-Step 'Checking Python (3.10 or newer)'
 $py = Find-SystemPython

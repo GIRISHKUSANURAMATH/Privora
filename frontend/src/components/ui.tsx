@@ -314,7 +314,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastCtx.Provider value={push}>
       {children}
-      <div className="pointer-events-none fixed bottom-4 right-4 z-[100] flex w-[min(380px,calc(100vw-32px))] flex-col gap-2" aria-live="polite">
+      <div className="pointer-events-none fixed bottom-4 right-4 z-[100] flex w-[min(380px,calc(100vw-32px))] flex-col gap-2" aria-live="polite" data-toasts="">
         <AnimatePresence>
           {items.map((t) => {
             const Icon = t.tone === "success" ? CheckCircle2 : t.tone === "error" ? XCircle : Info;
@@ -398,7 +398,7 @@ export function Confirm({ open, title, body, confirmLabel, onConfirm, onClose, d
 /* ------------------------------------------------------------------ Tabs */
 export function Tabs<T extends string>({ value, onChange, tabs }: { value: T; onChange: (v: T) => void; tabs: { value: T; label: string; count?: number }[] }) {
   return (
-    <div role="tablist" className="scrollbar-thin flex gap-1 overflow-x-auto border-b border-line">
+    <div role="tablist" className="scrollbar-thin relative flex gap-1 overflow-x-auto border-b border-line">
       {tabs.map((t) => (
         <button
           key={t.value}
